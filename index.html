@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冰球智能计时记分系统 - 小叶子</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #0a0a0f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--dark-bg);
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .cyber-gradient {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                var(--neon-purple),
+                var(--neon-blue),
+                #ff003c
+            );
+            opacity: 0.3;
+            mix-blend-mode: screen;
+            animation: gradientFlow 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientFlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 导航样式 */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(188, 19, 254, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            position: relative;
+            transition: 0.3s all ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-purple);
+            transition: 0.3s width ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            margin-top: 80px;
+        }
+
+        /* Hero部分 */
+        .hero {
+            text-align: center;
+            padding: 8rem 0;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(90deg, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px var(--neon-blue); }
+            to { text-shadow: 0 0 20px var(--neon-purple), 0 0 30px var(--neon-blue); }
+        }
+
+        /* 功能卡片 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 5rem 0;
+        }
+
+        .system-card {
+            background: rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s all ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .system-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px var(--neon-purple);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--neon-blue);
+            margin-bottom: 1rem;
+        }
+
+        /* 下载按钮 */
+        .download-btn {
+            display: inline-block;
+            margin: 1rem 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s all ease;
+        }
+
+        /* 页脚 */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 3rem 0;
+            margin-top: 5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .contact-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-gradient"></div>
+    
+    <!-- 导航 -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">PuckTime Pro</div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link">首页</a>
+                <a href="#features" class="nav-link">核心功能</a>
+                <a href="#download" class="nav-link">软件下载</a>
+				<a href="#readme" class="nav-link">项目文档</a>
+                <a href="#contact" class="nav-link">技术支持</a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 首页 -->
+        <section class="hero" id="home">
+            <h1>冰球专业计时系统</h1>
+            <p>赛事级计时解决方案｜支持5v5/3v3模式｜实时画面同步</p>
+            <a href="#download" class="download-btn">立即下载</a>
+        </section>
+
+        <!-- 核心功能 -->
+        <section class="features" id="features">
+            <div class="system-card">
+                <i class="fas fa-stopwatch feature-icon"></i>
+                <h2>智能规则管理</h2>
+                <ul>
+                    <li>自由定义赛制</li>
+					<li>支持三人竞技模式</li>
+                    <li>参赛队伍队徽管理</li>
+                    <li>多媒体屏播放控制</li>
+                </ul>
+            </div>
+
+            <div class="system-card">
+                <i class="fas fa-network-wired feature-icon"></i>
+                <h2>多彩多屏显示</h2>
+                <ul>
+                    <li>多彩颜色自定义</li>
+                    <li>屏幕大小自适应</li>
+                    <li>局域网多屏显示</li>
+                </ul>
+            </div>
+
+            <div class="system-card">
+                <i class="fas fa-database feature-icon"></i>
+                <h2>计时记分系统</h2>
+                <ul>
+                    <li>赛事信息管理</li>
+					<li>射门得分统计</li>
+                    <li>计时记罚管理</li>
+                    <li>媒体资源管理</li>
+					<li>智能宣告系统</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="robot" class="features">
+            <div class="system-card">
+                <i class="fas fa-cogs feature-icon"></i>
+                <h2>智能宣告</h2>
+                <div class="tool-list">
+                    <a href="https://www.banlangen.top/PuckTimeScorer/%E5%86%B0%E7%90%83%E6%AF%94%E8%B5%9B%E5%AE%A3%E5%91%8A%E6%9C%BA%E5%99%A8%E4%BA%BA" class="download-btn">宣告机器人</a>
+            </div>
+        </section>
+
+
+
+        <!-- 操作手册 -->
+        <section class="features">
+            <div class="system-card">
+                <i class="fas fa-cogs feature-icon"></i>
+                <h2>视频指南</h2>
+                <a href="https://www.banlangen.top/PuckTimeScorer/%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.mp4" class="download-btn">5v5标准版</a>
+                <a href="https://www.banlangen.top/PuckTimeScorer/%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E3v3.mp4" class="download-btn">3v3竞技版</a>
+            </div>
+        </section>
+
+        <section id="download" class="features">
+            <div class="system-card">
+                <i class="fas fa-download feature-icon"></i>
+                <h2>版本下载</h2>
+                <a href="https://www.banlangen.top/PuckTimeScorer/IceHockey.exe" class="download-btn">5v5标准版</a>
+                <a href="https://www.banlangen.top/PuckTimeScorer/IceHockey3v3.exe" class="download-btn">3v3竞技版</a>
+                <p style="margin-top:1rem;color:#aaa;">支持Windows 7/8/10/11</p>
+            </div>
+
+        </section>
+		
+		<section id="readme" class="features">
+            <div class="system-card">
+                <i class="fas fa-cogs feature-icon"></i>
+                <h2>项目文档</h2>
+                <div class="tool-list">
+                    <a href="https://www.banlangen.top/PuckTimeScorer" class="download-btn">文档说明</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-envelope contact-icon"></i>
+                <h3>技术支持</h3>
+                <p>long@banlangen.top</p>
+                <a href="mailto:long@banlangen.top" class="download-btn">发送邮件</a>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-phone contact-icon"></i>
+                <h3>联系电话</h3>
+                <p>131-4112-3766</p>
+                <a href="tel:13141123766" class="download-btn">立即拨打</a>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // 移动端菜单切换
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuBtn.addEventListener('click', () => {
+            const isVisible = navLinks.style.display === 'flex';
+            navLinks.style.display = isVisible ? 'none' : 'flex';
+        });
+
+        // 卡片动画
+        const cards = document.querySelectorAll('.system-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.style.opacity = 1;
+                }
+            });
+        });
+
+        cards.forEach(card => {
+            card.style.transform = 'translateY(50px)';
+            card.style.opacity = 0;
+            card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
